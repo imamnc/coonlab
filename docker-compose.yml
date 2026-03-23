@@ -1,0 +1,393 @@
+services:
+
+  # ==================================================================================
+  # PANEL
+  # ----------------------------------------------------------------------------------
+  # Kacoonlab access panel — single-page Vue dashboard for the full dev stack.
+  # ==================================================================================
+  panel:
+    container_name: kacoonlab-app-panel
+    build:
+      context: ./panel
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./panel/index.html:/usr/share/nginx/html/index.html:ro
+    restart: unless-stopped
+    networks:
+      - kacoonet
+
+  # ==================================================================================
+  # PORTAINER
+  # ----------------------------------------------------------------------------------
+  # This service runs a Portainer instance.
+  # ==================================================================================  
+  portainer:
+    container_name: kacoonlab-app-portainer
+    #image: portainer/portainer-ce:2.21.4-alpine
+    image: portainer/portainer-ce:latest
+    restart: unless-stopped
+    ports:
+      - "9003:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # ==================================================================================
+  # GOLANG
+  # ----------------------------------------------------------------------------------
+  # This service runs a Golang development environment.
+  # ==================================================================================
+  golang:
+    container_name: kacoonlab-bin-golang
+    tty: true
+    build:
+      context: ./golang
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../Projects:/app
+    ports:
+      - "8380:8380"
+    networks:
+      - kacoonet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # ==================================================================================
+  # NODEJS
+  # ----------------------------------------------------------------------------------
+  # This service runs a Node.js development environment.
+  # ==================================================================================
+  nodejs:
+    container_name: kacoonlab-bin-nodejs
+    tty: true
+    build:
+      context: ./nodejs
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../Projects:/app
+    ports:
+      - "3010:3010"
+      - "5172:5172"
+    networks:
+      - kacoonet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # ==================================================================================
+  # BUN
+  # ----------------------------------------------------------------------------------
+  # This service runs a Bun development environment.
+  # ==================================================================================
+  bun:
+    container_name: kacoonlab-bin-bun
+    tty: true
+    build:
+      context: ./bun
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../Projects:/app
+    ports:
+      - "3020:3020"
+      - "5170:5170"
+    networks:
+      - kacoonet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # ==================================================================================
+  # PYTHON
+  # ----------------------------------------------------------------------------------
+  # This service runs a Python development environment.
+  # ==================================================================================
+  python:
+    container_name: kacoonlab-bin-python
+    tty: true
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../Projects:/app
+    ports:
+      - "8290:8290"
+      - "5290:5290"
+    networks:
+      - kacoonet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # ==================================================================================
+  # PHP 8.3
+  # ----------------------------------------------------------------------------------
+  # This service runs a PHP 8.3 development environment.
+  # ==================================================================================
+  php83:
+    container_name: kacoonlab-bin-php83
+    build:
+      context: ./php/8.3
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../Projects:/var/www/html
+      - ./php/8.3/supervisor:/etc/supervisor.d
+      - ./php/8.3/crontab/jobs:/etc/crontabs/jobs
+    ports:
+      - "8183:8000"
+      - "5183:5183"
+    networks:
+      - kacoonet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  
+  # ==================================================================================
+  # PHP 8.0
+  # ----------------------------------------------------------------------------------
+  # This service runs a PHP 8.0 development environment.
+  # ==================================================================================
+  php80:
+    container_name: kacoonlab-bin-php80
+    build:
+      context: php/8.0
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../Projects:/var/www/html
+      - ./php/8.0/php.ini:/usr/local/etc/php/php.ini
+      - ./php/8.0/supervisor/:/etc/supervisor.d
+      - ./php/8.0/www.conf:/usr/local/etc/php-fpm.d/www.conf
+    ports:
+      - "8180:8000"
+      - "5180:5180"
+    networks:
+      - kacoonet
+    environment:
+      - PHP_MEMORY_LIMIT=512M
+    extra_hosts:
+      - "host.docker.internal:host-gateway" 
+
+  # ==================================================================================
+  # MYSQL 8.0
+  # ----------------------------------------------------------------------------------
+  # This service runs a MySQL 8.0 database.
+  # ==================================================================================
+  mysql:
+    container_name: kacoonlab-bin-mysql
+    image: mysql:8.0
+    restart: unless-stopped
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: kacoon
+      MYSQL_USER: kacoon
+      MYSQL_PASSWORD: kacoon
+    networks:
+      - kacoonet
+
+  # ==================================================================================
+  # POSTGRES 13
+  # ----------------------------------------------------------------------------------
+  # This service runs a PostgreSQL 13 database.
+  # ==================================================================================
+  postgres:
+    container_name: kacoonlab-bin-postgres
+    image: postgres:13
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: kacoon
+      POSTGRES_PASSWORD: kacoon
+      POSTGRES_DATABASE: kacoon
+    networks:
+      - kacoonet
+
+  # ==================================================================================
+  # MONGODB
+  # ----------------------------------------------------------------------------------
+  # This service runs a MongoDB database.
+  # ==================================================================================
+  mongodb:
+    container_name: kacoonlab-bin-mongodb
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: kacoon
+      MONGO_INITDB_ROOT_PASSWORD: kacoon
+    networks:
+      - kacoonet
+
+  # ==================================================================================
+  # REDIS
+  # ----------------------------------------------------------------------------------
+  # This service runs a Redis in-memory data structure store.
+  # ==================================================================================
+  redis:
+    container_name: kacoonlab-bin-redis
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - kacoonet
+
+  # ==================================================================================
+  # MINIO
+  # ----------------------------------------------------------------------------------
+  # This service runs a MinIO object storage server.
+  # ==================================================================================
+  minio:
+    container_name: kacoonlab-bin-minio
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: kacoon
+      MINIO_ROOT_PASSWORD: kacoon123
+    volumes:
+      - ./minio:/data
+    networks:
+      - kacoonet
+  
+  # ==================================================================================
+  # MINIO CLIENT
+  # ----------------------------------------------------------------------------------
+  # This service runs the MinIO client (mc) for managing the MinIO server.
+  # ==================================================================================
+  minio-client:
+    container_name: kacoonlab-bin-minio-client
+    image: minio/mc
+    restart: unless-stopped
+    entrypoint: /bin/sh
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./minio-client/data:/root/.mc
+      - ./minio-client/cors:/config
+    networks:
+      - kacoonet
+  # ==================================================================================
+  # MAILPIT
+  # ----------------------------------------------------------------------------------
+  # This service runs a Mailpit email testing tool.
+  # ==================================================================================
+  mailpit:
+    container_name: kacoonlab-app-mailpit
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - kacoonet
+
+  # ==================================================================================
+  # PGADMIN (LATEST)
+  # ----------------------------------------------------------------------------------
+  # This service provides a web UI to manage PostgreSQL databases.
+  # Default login: admin@local / kacoon
+  # ==================================================================================
+  pgadmin:
+    container_name: kacoonlab-app-pgadmin
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    ports:
+      - "5433:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.admin
+      PGADMIN_DEFAULT_PASSWORD: kacoon
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - kacoonet
+
+  # ==================================================================================
+  # PHPMYADMIN
+  # ----------------------------------------------------------------------------------
+  # This service provides a web UI to manage MySQL databases.
+  # ==================================================================================
+  phpmyadmin:
+    container_name: kacoonlab-app-phpmyadmin
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    ports:
+      - "3307:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+      UPLOAD_LIMIT: 256M
+    depends_on:
+      - mysql
+    networks:
+      - kacoonet
+
+  # ==================================================================================
+  # MONGO EXPRESS
+  # ----------------------------------------------------------------------------------
+  # This service provides a web UI to manage MongoDB.
+  # Default login (basic auth): admin / admin
+  # ==================================================================================
+  mongoexpress:
+    container_name: kacoonlab-app-mongoexpress
+    image: mongo-express:latest
+    restart: unless-stopped
+    ports:
+      - "27018:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_ADMINUSERNAME: kacoon
+      ME_CONFIG_MONGODB_ADMINPASSWORD: kacoon
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    depends_on:
+      - mongodb
+    networks:
+      - kacoonet
+
+# ==================================================================================
+# VOLUMES
+# ----------------------------------------------------------------------------------
+# Define named volumes for persistent data storage.
+# ==================================================================================
+volumes:
+  mysql_data:
+    driver: local
+  postgres_data:
+    driver: local
+  portainer_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  mongodb_data:
+    driver: local
+
+# ==================================================================================
+# NETWORKS
+# ----------------------------------------------------------------------------------
+# Define a custom network for the services to communicate.
+# ==================================================================================
+networks:
+  kacoonet:
+    driver: bridge
