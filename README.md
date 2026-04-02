@@ -33,7 +33,7 @@ Persistent data is stored in named volumes for databases and admin tools, while 
 
 | Service        | Purpose                 | Host Port(s)   | Container Port(s) |
 | -------------- | ----------------------- | -------------- | ----------------- |
-| `panel`        | CoonLabs access panel   | `8080`         | `80`              |
+| `panel`        | CoonLabs access panel   | `7000`         | `80`              |
 | `portainer`    | Docker UI               | `9003`         | `9000`            |
 | `golang`       | Go dev environment      | `8380`         | `8380`            |
 | `nodejs`       | Node.js dev environment | `3010`, `5172` | `3010`, `5172`    |
@@ -75,7 +75,7 @@ docker compose down -v
 
 ## 🔗 Service URLs
 
-- **CoonLabs Panel: http://localhost:8080**
+- **CoonLabs Panel: http://localhost:7000**
 - Portainer: http://localhost:9003
 - MinIO console: http://localhost:9001
 - MinIO API: http://localhost:9000
@@ -122,7 +122,7 @@ Use `php83` and `php80` for PHP projects. Both mount the shared workspace and in
 
 ## 🧭 Panel
 
-The `panel` service at http://localhost:8080 is a Vue single-page dashboard that lists every service in the stack, its ports, credentials, and direct open links. Use it as the main entry point when the stack is running.
+The `panel` service at http://localhost:7000 is a Vue single-page dashboard that lists every service in the stack, its ports, credentials, and direct open links. Use it as the main entry point when the stack is running.
 
 ## 📝 Notes
 

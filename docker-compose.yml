@@ -11,7 +11,7 @@ services:
       context: ./panel
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "7000:80"
     volumes:
       - ./panel/index.html:/usr/share/nginx/html/index.html:ro
     restart: unless-stopped
