@@ -366,6 +366,26 @@ services:
     networks:
       - kacoonet
 
+  # ==================================================================================
+  # GRAFANA
+  # ----------------------------------------------------------------------------------
+  # This service runs Grafana, an open-source visualization and monitoring platform.
+  # ==================================================================================
+  grafana:
+    container_name: kacoonlab-app-grafana
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: kacoon
+      GF_SECURITY_ADMIN_USER: admin
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - kacoonet
+
 # ==================================================================================
 # VOLUMES
 # ----------------------------------------------------------------------------------
@@ -381,6 +401,8 @@ volumes:
   pgadmin_data:
     driver: local
   mongodb_data:
+    driver: local
+  grafana_data:
     driver: local
 
 # ==================================================================================
