@@ -284,6 +284,24 @@ services:
       - ./minio-client/cors:/config
     networks:
       - kacoonet
+  
+  # ==================================================================================
+  # MEILISEARCH
+  # ----------------------------------------------------------------------------------
+  # This service runs a Meilisearch instance, an open-source search engine.
+  # ==================================================================================
+  meilisearch:
+    container_name: kacoonlab-bin-meilisearch
+    image: getmeili/meilisearch:v1
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_MASTER_KEY: kacoon
+    volumes:
+      - ./meilisearch:/meili_data
+    networks:
+      - kacoonet
+
   # ==================================================================================
   # MAILPIT
   # ----------------------------------------------------------------------------------
