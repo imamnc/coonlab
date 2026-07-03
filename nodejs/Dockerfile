@@ -1,5 +1,5 @@
 # Get base image
-FROM node:22.17
+FROM node:26
 
 # Install software
 RUN apt-get update && apt-get install -y nano git curl
