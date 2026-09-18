@@ -212,6 +212,26 @@ services:
       POSTGRES_DATABASE: kacoon
     networks:
       - kacoonet
+  
+  # ==================================================================================
+  # POSTGRES 18
+  # ----------------------------------------------------------------------------------
+  # This service runs a PostgreSQL 18 database.
+  # ==================================================================================
+  postgres18:
+    container_name: kacoonlab-bin-postgres18
+    image: postgres:18.1
+    restart: unless-stopped
+    volumes:
+      - postgres18_data:/var/lib/postgresql
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: kacoon
+      POSTGRES_PASSWORD: kacoon
+      POSTGRES_DATABASE: kacoon
+    networks:
+      - kacoonet
 
   # ==================================================================================
   # MONGODB
@@ -415,6 +435,8 @@ volumes:
   mysql_data:
     driver: local
   postgres_data:
+    driver: local
+  postgres18_data:
     driver: local
   portainer_data:
     driver: local

@@ -4,8 +4,8 @@ FROM node:26
 # Install software
 RUN apt-get update && apt-get install -y nano git curl
 
-# Install pm2
-RUN npm install pm2@latest -g
+# Install pm2 and pnpm
+RUN npm install pm2@latest pnpm@latest -g
 
 # Make pm2 directory
 RUN mkdir -p /app

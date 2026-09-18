@@ -1,659 +1,723 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kacoonlab — Dev Stack Panel</title>
-  <link rel="shortcut icon" href="https://pbs.twimg.com/profile_images/1816856437567406080/ByISu1ft_400x400.jpg" type="image/png">
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kacoonlab — Dev Stack Panel</title>
+    <link
+      rel="shortcut icon"
+      href="https://pbs.twimg.com/profile_images/1816856437567406080/ByISu1ft_400x400.jpg"
+      type="image/png"
+    />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    :root {
-      --bg:      #0c0c0c;
-      --surface: #111111;
-      --surface2:#161616;
-      --border:  #222222;
-      --border2: #2a2a2a;
-      --text:    #d4d4d4;
-      --muted:   #555555;
-      --accent:  #152743;
-      --green:   #22c55e;
-      --mono:    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
-    }
+      :root {
+        --bg: #212121;
+        --surface: #111111;
+        --surface2: #161616;
+        --border: #3e3e3e;
+        --border2: #2a2a2a;
+        --text: #d4d4d4;
+        --muted: #a4a4a4;
+        --accent: #152743;
+        --green: #22c55e;
+        --mono: "SF Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      font-size: 14px;
-    }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        font-size: 14px;
+      }
 
-    /* ── Header ── */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-    }
-    
-    header .header-container {
-      padding: 0 1.75rem;
-      height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      max-width: 1280px;
-      margin: 0 auto;
-    }
+      /* ── Header ── */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+      }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      flex-shrink: 0;
-      font-family: var(--mono);
-    }
+      header .header-container {
+        padding: 0 1.75rem;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        max-width: 1280px;
+        margin: 0 auto;
+      }
 
-    .logo-bracket { color: var(--muted); font-size: 0.95rem; }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        flex-shrink: 0;
+        font-family: var(--mono);
+      }
 
-    .logo-name {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: 0.02em;
-    }
+      .logo-bracket {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
 
-    .logo-tag {
-      font-size: 0.72rem;
-      color: var(--muted);
-      padding: 0.15rem 0.45rem;
-      border: 1px solid var(--border2);
-      border-radius: 3px;
-      letter-spacing: 0.03em;
-    }
+      .logo-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text);
+        letter-spacing: 0.02em;
+      }
 
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
+      .logo-tag {
+        font-size: 0.72rem;
+        color: var(--muted);
+        padding: 0.15rem 0.45rem;
+        border: 1px solid var(--border2);
+        border-radius: 3px;
+        letter-spacing: 0.03em;
+      }
 
-    .search {
-      background: var(--surface2);
-      border: 1px solid var(--border2);
-      border-radius: 4px;
-      padding: 0.4rem 0.8rem;
-      color: var(--text);
-      font-size: 0.82rem;
-      font-family: var(--mono);
-      width: 210px;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    .search:focus { border-color: var(--accent); }
-    .search::placeholder { color: var(--muted); }
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+      }
 
-    .count-tag {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-      white-space: nowrap;
-    }
+      .search {
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: 4px;
+        padding: 0.4rem 0.8rem;
+        color: var(--text);
+        font-size: 0.82rem;
+        font-family: var(--mono);
+        width: 210px;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      .search:focus {
+        border-color: var(--accent);
+      }
+      .search::placeholder {
+        color: var(--muted);
+      }
 
-    /* ── Main ── */
-    main {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 1.75rem;
-    }
+      .count-tag {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
 
-    /* ── Section ── */
-    .section { margin-bottom: 2.25rem; }
+      /* ── Main ── */
+      main {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 1.75rem;
+      }
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.85rem;
-    }
+      /* ── Section ── */
+      .section {
+        margin-bottom: 2.25rem;
+      }
 
-    .section-header h2 {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      white-space: nowrap;
-    }
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.85rem;
+      }
 
-    .section-header::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
+      .section-header h2 {
+        font-family: var(--mono);
+        font-size: 1rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+      }
 
-    /* ── Grid ── */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 10px;
-      border-radius: 6px;
-      overflow: hidden;
-    }
+      .section-header::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
 
-    /* ── Card ── */
-    .card {
-      background: var(--surface);
-      padding: 1rem 1.1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      transition: background 0.15s;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-    }
+      /* ── Grid ── */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 10px;
+        border-radius: 6px;
+        overflow: hidden;
+      }
 
-    .card:hover { background: var(--surface2); }
+      /* ── Card ── */
+      .card {
+        background: var(--surface);
+        padding: 1rem 1.1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        transition: background 0.15s;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
 
-    /* Remove duplicate inner borders at grid edges */
-    .card:nth-last-child(-n+1) { border-bottom: none; }
+      .card:hover {
+        background: var(--surface2);
+      }
 
-    /* ── Card head ── */
-    .card-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.55rem;
-    }
+      /* Remove duplicate inner borders at grid edges */
+      .card:nth-last-child(-n + 1) {
+        border-bottom: none;
+      }
 
-    .card-name {
-      font-family: var(--mono);
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: 0.01em;
-    }
+      /* ── Card head ── */
+      .card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.55rem;
+      }
 
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      flex-shrink: 0;
-    }
+      .card-name {
+        font-family: var(--mono);
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text);
+        letter-spacing: 0.01em;
+      }
 
-    .card-desc {
-      font-size: 0.77rem;
-      color: var(--muted);
-      line-height: 1.5;
-      margin-bottom: 0.75rem;
-    }
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--green);
+        flex-shrink: 0;
+      }
 
-    /* ── Info table ── */
-    .info-table {
-      margin-bottom: 0.85rem;
-      border-top: 1px solid var(--border);
-    }
+      .card-desc {
+        font-size: 0.77rem;
+        color: var(--muted);
+        line-height: 1.5;
+        margin-bottom: 0.75rem;
+      }
 
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.28rem 0;
-      border-bottom: 1px solid var(--border);
-    }
+      /* ── Info table ── */
+      .info-table {
+        margin-bottom: 0.85rem;
+        border-top: 1px solid var(--border);
+      }
 
-    .info-key {
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.02em;
-    }
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.28rem 0;
+        border-bottom: 1px solid var(--border);
+      }
 
-    .info-val {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--text);
-    }
+      .info-key {
+        font-size: 0.72rem;
+        color: var(--muted);
+        letter-spacing: 0.02em;
+      }
 
-    /* ── Actions ── */
-    .actions {
-      display: flex;
-      gap: 0.4rem;
-      margin-top: auto;
-    }
+      .info-val {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--text);
+      }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.3rem;
-      padding: 0.35rem 0.7rem;
-      border-radius: 3px;
-      font-size: 0.75rem;
-      font-family: var(--mono);
-      font-weight: 500;
-      cursor: pointer;
-      text-decoration: none;
-      transition: opacity 0.15s;
-      border: 1px solid transparent;
-      outline: none;
-    }
+      /* ── Actions ── */
+      .actions {
+        display: flex;
+        gap: 0.4rem;
+        margin-top: auto;
+      }
 
-    .btn:hover { opacity: 0.75; }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        padding: 0.35rem 0.7rem;
+        border-radius: 3px;
+        font-size: 0.75rem;
+        font-family: var(--mono);
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.15s;
+        border: 1px solid transparent;
+        outline: none;
+      }
 
-    .btn-primary {
-      flex: 1;
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-    }
+      .btn:hover {
+        opacity: 0.75;
+      }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      border-color: var(--border2);
-    }
+      .btn-primary {
+        flex: 1;
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
 
-    .btn-ghost:hover { color: var(--text); opacity: 1; border-color: #444; }
+      .btn-ghost {
+        background: transparent;
+        color: var(--muted);
+        border-color: var(--border2);
+      }
 
-    .btn-dsn {
-      flex: 1;
-      background: transparent;
-      color: var(--text);
-      border-color: var(--border2);
-    }
+      .btn-ghost:hover {
+        color: var(--text);
+        opacity: 1;
+        border-color: #444;
+      }
 
-    /* ── Empty ── */
-    .empty {
-      padding: 3.5rem 2rem;
-      text-align: center;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 0.8rem;
-    }
+      .btn-dsn {
+        flex: 1;
+        background: transparent;
+        color: var(--text);
+        border-color: var(--border2);
+      }
 
-    /* ── Toast ── */
-    .toast {
-      position: fixed;
-      bottom: 1.25rem;
-      right: 1.25rem;
-      background: var(--surface2);
-      border: 1px solid var(--border2);
-      border-radius: 4px;
-      padding: 0.5rem 0.9rem;
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      color: var(--green);
-      pointer-events: none;
-      animation: pop 0.15s ease;
-      z-index: 50;
-    }
+      /* ── Empty ── */
+      .empty {
+        padding: 3.5rem 2rem;
+        text-align: center;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 0.8rem;
+      }
 
-    @keyframes pop {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+      /* ── Toast ── */
+      .toast {
+        position: fixed;
+        bottom: 1.25rem;
+        right: 1.25rem;
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: 4px;
+        padding: 0.5rem 0.9rem;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        color: var(--green);
+        pointer-events: none;
+        animation: pop 0.15s ease;
+        z-index: 50;
+      }
 
-    /* ── Footer ── */
-    footer {
-      text-align: center;
-      padding: 1.25rem;
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-    }
-  </style>
-</head>
-<body>
-<div id="app">
+      @keyframes pop {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-  <header>
-    <div class="header-container">
-        <div class="logo">
+      /* ── Footer ── */
+      footer {
+        text-align: center;
+        padding: 1.25rem;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--muted);
+        border-top: 1px solid var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <div class="header-container">
+          <div class="logo">
             <span class="logo-bracket">[</span>
             <span class="logo-name">kacoonlab</span>
-        <span class="logo-bracket">]</span>
-        <span class="logo-tag">dev stack</span>
-        </div>
-        <div class="header-right">
-            <input class="search" v-model="query" type="search" placeholder="/ search services" />
+            <span class="logo-bracket">]</span>
+            <span class="logo-tag">dev stack</span>
+          </div>
+          <div class="header-right">
+            <input
+              class="search"
+              v-model="query"
+              type="search"
+              placeholder="/ search services"
+            />
             <span class="count-tag">{{ totalVisible }} services</span>
-        </div>
-    </div>
-  </header>
-
-  <main>
-    <template v-for="group in visibleGroups" :key="group.label">
-      <section class="section">
-        <div class="section-header">
-          <h2>{{ group.label }}</h2>
-        </div>
-        <div class="grid">
-          <div
-            v-for="svc in group.items"
-            :key="svc.name"
-            class="card"
-          >
-            <div class="card-head">
-              <div style="display:flex;align-items:center;gap:0.5rem;"><img v-if="svc.icon" :src="svc.icon" style="width:1.2rem;height:1.2rem;display:block;"/><span class="card-name">{{ svc.name }}</span></div>
-              <span class="status-dot"></span>
-            </div>
-
-            <p class="card-desc">{{ svc.desc }}</p>
-
-            <div class="info-table">
-              <div class="info-row" v-for="row in svc.info" :key="row.k">
-                <span class="info-key">{{ row.k }}</span>
-                <span class="info-val">{{ row.v }}</span>
-              </div>
-            </div>
-
-            <!-- DB card -->
-            <div class="actions" v-if="svc.dsn">
-              <button class="btn btn-dsn" @click="copy(svc.dsn)">copy dsn</button>
-            </div>
-
-            <!-- UI card -->
-            <div class="actions" v-else-if="svc.url">
-              <a class="btn btn-primary" :href="svc.url" target="_blank" rel="noopener noreferrer">open ↗</a>
-              <button class="btn btn-ghost" @click="copy(svc.url)">copy</button>
-            </div>
-
-            <!-- Runtime card -->
-            <div class="actions" v-else>
-              <button class="btn btn-ghost" style="flex:1" @click="copy(svc.info[0].v)">copy host</button>
-            </div>
           </div>
         </div>
-      </section>
-    </template>
+      </header>
 
-    <div class="empty" v-if="totalVisible === 0">
-      no results for "{{ query }}"
+      <main>
+        <template v-for="group in visibleGroups" :key="group.label">
+          <section class="section">
+            <div class="section-header">
+              <h2>{{ group.label }}</h2>
+            </div>
+            <div class="grid">
+              <div v-for="svc in group.items" :key="svc.name" class="card">
+                <div class="card-head">
+                  <div style="display: flex; align-items: center; gap: 0.5rem">
+                    <img
+                      v-if="svc.icon"
+                      :src="svc.icon"
+                      style="width: 2rem; height: 2rem; display: block"
+                    /><span class="card-name">{{ svc.name }}</span>
+                  </div>
+                  <span class="status-dot"></span>
+                </div>
+
+                <p class="card-desc">{{ svc.desc }}</p>
+
+                <div class="info-table">
+                  <div class="info-row" v-for="row in svc.info" :key="row.k">
+                    <span class="info-key">{{ row.k }}</span>
+                    <span class="info-val">{{ row.v }}</span>
+                  </div>
+                </div>
+
+                <!-- DB card -->
+                <div class="actions" v-if="svc.dsn">
+                  <button class="btn btn-dsn" @click="copy(svc.dsn)">
+                    copy dsn
+                  </button>
+                </div>
+
+                <!-- UI card -->
+                <div class="actions" v-else-if="svc.url">
+                  <a
+                    class="btn btn-primary"
+                    :href="svc.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >open ↗</a
+                  >
+                  <button class="btn btn-ghost" @click="copy(svc.url)">
+                    copy
+                  </button>
+                </div>
+
+                <!-- Runtime card -->
+                <div class="actions" v-else>
+                  <button
+                    class="btn btn-ghost"
+                    style="flex: 1"
+                    @click="copy(svc.info[0].v)"
+                  >
+                    copy host
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </template>
+
+        <div class="empty" v-if="totalVisible === 0">
+          no results for "{{ query }}"
+        </div>
+      </main>
+
+      <footer>kacoonlab · local development stack · localhost</footer>
+
+      <transition name="fade">
+        <div class="toast" v-if="toast">{{ toast }}</div>
+      </transition>
     </div>
-  </main>
 
-  <footer>kacoonlab · local development stack · localhost</footer>
+    <script>
+      const { createApp, ref, computed } = Vue;
 
-  <transition name="fade">
-    <div class="toast" v-if="toast">{{ toast }}</div>
-  </transition>
+      createApp({
+        setup() {
+          const query = ref("");
+          const toast = ref("");
+          let toastTimer;
 
-</div>
+          function copy(text) {
+            navigator.clipboard
+              .writeText(text)
+              .catch(() => {
+                const el = document.createElement("textarea");
+                el.value = text;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand("copy");
+                document.body.removeChild(el);
+              })
+              .finally(() => {
+                clearTimeout(toastTimer);
+                toast.value = "copied to clipboard";
+                toastTimer = setTimeout(() => (toast.value = ""), 2000);
+              });
+          }
 
-<script>
-const { createApp, ref, computed } = Vue;
+          const groups = [
+            {
+              label: "Tools & Apps",
+              items: [
+                {
+                  name: "Portainer",
+                  icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt8_HQtStJ9dicsmutJByRbM3Lbb2Kph9WemAHUCWSIJyIXNHZuykMM4g&s=10",
+                  desc: "Docker container management UI.",
+                  url: "http://localhost:9003",
+                  info: [{ k: "url", v: "localhost:9003" }],
+                },
+                {
+                  name: "pgAdmin",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
+                  desc: "Web-based administration tool for PostgreSQL.",
+                  url: "http://localhost:5433",
+                  info: [
+                    { k: "url", v: "localhost:5433" },
+                    { k: "email", v: "admin@admin.admin" },
+                    { k: "password", v: "kacoon" },
+                  ],
+                },
+                {
+                  name: "phpMyAdmin",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg",
+                  desc: "Web-based MySQL database administration UI.",
+                  url: "http://localhost:3307",
+                  info: [
+                    { k: "url", v: "localhost:3307" },
+                    { k: "user", v: "root" },
+                    { k: "password", v: "root" },
+                  ],
+                },
+                {
+                  name: "Mongo Express",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg",
+                  desc: "Web-based MongoDB management UI.",
+                  url: "http://localhost:27018",
+                  info: [
+                    { k: "url", v: "localhost:27018" },
+                    { k: "auth", v: "admin / admin" },
+                  ],
+                },
+                {
+                  name: "MinIO Console",
+                  icon: "https://cdn.simpleicons.org/minio/C7202C",
+                  desc: "S3-compatible object storage management UI.",
+                  url: "http://localhost:9001",
+                  info: [
+                    { k: "url", v: "localhost:9001" },
+                    { k: "email", v: "admin@admin.admin" },
+                    { k: "user", v: "kacoon" },
+                    { k: "password", v: "kacoon123" },
+                  ],
+                },
+                {
+                  name: "Mailpit",
+                  icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mailpit.png",
+                  desc: "Local email testing inbox that captures all outbound mail.",
+                  url: "http://localhost:8025",
+                  info: [
+                    { k: "web", v: "localhost:8025" },
+                    { k: "smtp", v: "localhost:1025" },
+                  ],
+                },
+                {
+                  name: "Meilisearch",
+                  icon: "https://www.meilisearch.com/logo.png",
+                  desc: "Open-source, lightning-fast search engine with a web dashboard.",
+                  url: "http://localhost:7700",
+                  info: [
+                    { k: "url", v: "localhost:7700" },
+                    { k: "master key", v: "kacoon" },
+                  ],
+                },
+                {
+                  name: "Grafana",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/grafana/grafana-original.svg",
+                  desc: "Open-source visualization and monitoring platform for time-series data.",
+                  url: "http://localhost:3001",
+                  info: [
+                    { k: "url", v: "localhost:3001" },
+                    { k: "user", v: "admin" },
+                    { k: "password", v: "kacoon" },
+                  ],
+                },
+              ],
+            },
+            {
+              label: "Dev Runtimes",
+              items: [
+                {
+                  name: "Golang",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original.svg",
+                  desc: "Go development environment.",
+                  url: "http://localhost:8380",
+                  info: [{ k: "port", v: "localhost:8380" }],
+                },
+                {
+                  name: "Node.js",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
+                  desc: "Node.js 22 dev environment with PM2",
+                  url: "http://localhost:3010",
+                  info: [
+                    { k: "app", v: "localhost:3010" },
+                    { k: "dev", v: "localhost:5172" },
+                  ],
+                },
+                {
+                  name: "Bun",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bun/bun-original.svg",
+                  desc: "Bun 1.2.5 JavaScript runtime and bundler.",
+                  url: "http://localhost:3020",
+                  info: [
+                    { k: "app", v: "localhost:3020" },
+                    { k: "dev", v: "localhost:5170" },
+                  ],
+                },
+                {
+                  name: "Python",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg",
+                  desc: "Python development environment.",
+                  url: "http://localhost:8290",
+                  info: [
+                    { k: "ports", v: "8290, 5290" },
+                    { k: "dev", v: "localhost:5290" },
+                  ],
+                },
+                {
+                  name: "PHP 8.3",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg",
+                  desc: "PHP 8.3 + FPM + Supervisor + Cron.",
+                  url: "http://localhost:8183",
+                  info: [
+                    { k: "app", v: "localhost:8183" },
+                    { k: "dev", v: "localhost:5183" },
+                  ],
+                },
+                {
+                  name: "PHP 8.0",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg",
+                  desc: "PHP 8.0 + FPM + Supervisor + Cron.",
+                  url: "http://localhost:8180",
+                  info: [
+                    { k: "app", v: "localhost:8180" },
+                    { k: "dev", v: "localhost:5180" },
+                  ],
+                },
+              ],
+            },
+            {
+              label: "Databases",
+              items: [
+                {
+                  name: "MySQL 8.0",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg",
+                  desc: "Relational database. Default schema: kacoon.",
+                  dsn: "mysql://kacoon:kacoon@localhost:3306/kacoon",
+                  info: [
+                    { k: "host", v: "localhost:3306" },
+                    { k: "user", v: "kacoon" },
+                    { k: "password", v: "kacoon" },
+                    { k: "database", v: "kacoon" },
+                  ],
+                },
+                {
+                  name: "PostgreSQL 13",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
+                  desc: "Advanced open-source relational database.",
+                  dsn: "postgresql://kacoon:kacoon@localhost:5432/kacoon",
+                  info: [
+                    { k: "host", v: "localhost:5432" },
+                    { k: "user", v: "kacoon" },
+                    { k: "password", v: "kacoon" },
+                    { k: "database", v: "kacoon" },
+                  ],
+                },
+                {
+                  name: "PostgreSQL 18",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
+                  desc: "Advanced open-source relational database.",
+                  dsn: "postgresql://kacoon:kacoon@localhost:5435/kacoon",
+                  info: [
+                    { k: "host", v: "localhost:5435" },
+                    { k: "user", v: "kacoon" },
+                    { k: "password", v: "kacoon" },
+                    { k: "database", v: "kacoon" },
+                  ],
+                },
+                {
+                  name: "Meilisearch",
+                  icon: "https://www.meilisearch.com/logo.png",
+                  desc: "Search engine with a REST API and local index management.",
+                  dsn: "http://localhost:7700",
+                  info: [
+                    { k: "host", v: "localhost:7700" },
+                    { k: "api key", v: "kacoon" },
+                    { k: "type", v: "search" },
+                  ],
+                },
+                {
+                  name: "MongoDB 7",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original-wordmark.svg",
+                  desc: "Document-oriented NoSQL database.",
+                  dsn: "mongodb://kacoon:kacoon@localhost:27017",
+                  info: [
+                    { k: "host", v: "localhost:27017" },
+                    { k: "user", v: "kacoon" },
+                    { k: "password", v: "kacoon" },
+                  ],
+                },
+                {
+                  name: "Redis",
+                  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original.svg",
+                  desc: "In-memory data structure store.",
+                  dsn: "redis://localhost:6379",
+                  info: [
+                    { k: "host", v: "localhost:6379" },
+                    { k: "auth", v: "none" },
+                  ],
+                },
+              ],
+            },
+          ];
 
-createApp({
-  setup() {
-    const query = ref('');
-    const toast = ref('');
-    let toastTimer;
+          const visibleGroups = computed(() => {
+            const q = query.value.toLowerCase().trim();
+            if (!q) return groups;
+            return groups
+              .map((g) => ({
+                ...g,
+                items: g.items.filter(
+                  (s) =>
+                    s.name.toLowerCase().includes(q) ||
+                    s.desc.toLowerCase().includes(q),
+                ),
+              }))
+              .filter((g) => g.items.length > 0);
+          });
 
-    function copy(text) {
-      navigator.clipboard.writeText(text).catch(() => {
-        const el = document.createElement('textarea');
-        el.value = text;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-      }).finally(() => {
-        clearTimeout(toastTimer);
-        toast.value = 'copied to clipboard';
-        toastTimer = setTimeout(() => (toast.value = ''), 2000);
-      });
-    }
+          const totalVisible = computed(() =>
+            visibleGroups.value.reduce((n, g) => n + g.items.length, 0),
+          );
 
-    const groups = [
-      {
-        label: 'Management',
-        items: [
-          {
-            name: "Portainer",
-            icon: "https://img.icons8.com/color/96/docker.png",
-            desc: 'Docker container management and monitoring UI.',
-            url: 'http://localhost:9003',
-            info: [{ k: 'url', v: 'localhost:9003' }],
-          },
-          {
-            name: "pgAdmin",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
-            desc: 'Web-based administration tool for PostgreSQL databases.',
-            url: 'http://localhost:5433',
-            info: [
-              { k: 'url',      v: 'localhost:5433' },
-              { k: 'email',    v: 'admin@admin.admin' },
-              { k: 'password', v: 'kacoon' },
-            ],
-          },
-          {
-            name: "phpMyAdmin",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg",
-            desc: 'Web-based MySQL database administration interface.',
-            url: 'http://localhost:3307',
-            info: [
-              { k: 'url',      v: 'localhost:3307' },
-              { k: 'user',     v: 'root' },
-              { k: 'password', v: 'root' },
-            ],
-          },
-          {
-            name: "Mongo Express",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg",
-            desc: 'Web-based MongoDB management interface. Basic auth enabled.',
-            url: 'http://localhost:27018',
-            info: [
-              { k: 'url',  v: 'localhost:27018' },
-              { k: 'auth', v: 'admin / admin' },
-            ],
-          },
-          {
-            name: "MinIO Console",
-            icon: "https://cdn.simpleicons.org/minio/C7202C",
-            desc: 'S3-compatible object storage management console.',
-            url: 'http://localhost:9001',
-            info: [
-              { k: 'url',      v: 'localhost:9001' },
-              { k: 'user',     v: 'kacoon' },
-              { k: 'password', v: 'kacoon123' },
-            ],
-          },
-          {
-            name: "Mailpit",
-            icon: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2709.png",
-            desc: 'Local email testing inbox that captures all outbound mail.',
-            url: 'http://localhost:8025',
-            info: [
-              { k: 'web',  v: 'localhost:8025' },
-              { k: 'smtp', v: 'localhost:1025' },
-            ],
-          },
-          {
-            name: "Grafana",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/grafana/grafana-original.svg",
-            desc: 'Open-source visualization and monitoring platform for time-series data.',
-            url: 'http://localhost:3001',
-            info: [
-              { k: 'url',      v: 'localhost:3001' },
-              { k: 'user',     v: 'admin' },
-              { k: 'password', v: 'kacoon' },
-            ],
-          },
-        ],
-      },
-      {
-        label: 'Dev Runtimes',
-        items: [
-          {
-            name: "Golang",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original.svg",
-            desc: 'Go development environment. Source mounted at /app.',
-            url: 'http://localhost:8380',
-            info: [{ k: 'port', v: 'localhost:8380' }],
-          },
-          {
-            name: "Node.js",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
-            desc: 'Node.js 22 dev environment with PM2. Source at /app.',
-            url: 'http://localhost:3010',
-            info: [
-              { k: 'app', v: 'localhost:3010' },
-              { k: 'dev', v: 'localhost:5172' },
-            ],
-          },
-          {
-            name: "Bun",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bun/bun-original.svg",
-            desc: 'Bun 1.2.5 JavaScript runtime and bundler. Source at /app.',
-            url: 'http://localhost:3020',
-            info: [
-              { k: 'app', v: 'localhost:3020' },
-              { k: 'dev', v: 'localhost:5170' },
-            ],
-          },
-          {
-            name: "Python",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg",
-            desc: 'Python development environment. Source mounted at /app.',
-            url: 'http://localhost:8290',
-            info: [
-              { k: 'ports', v: '8290, 5290' },
-              { k: 'dev',   v: 'localhost:5290' },
-            ],
-          },
-          {
-            name: "PHP 8.3",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg",
-            desc: 'PHP 8.3 + FPM + Supervisor + Cron. Source at /var/www/html.',
-            url: 'http://localhost:8183',
-            info: [
-              { k: 'app', v: 'localhost:8183' },
-              { k: 'dev', v: 'localhost:5183' },
-            ],
-          },
-          {
-            name: "PHP 8.0",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg",
-            desc: 'PHP 8.0 + FPM + Supervisor. Memory limit 512 MB.',
-            url: 'http://localhost:8180',
-            info: [
-              { k: 'app', v: 'localhost:8180' },
-              { k: 'dev', v: 'localhost:5180' },
-            ],
-          },
-        ],
-      },
-      {
-        label: 'Databases',
-        items: [
-          {
-            name: "MySQL 8.0",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg",
-            desc: 'Relational database. Default schema: kacoon.',
-            dsn: 'mysql://kacoon:kacoon@localhost:3306/kacoon',
-            info: [
-              { k: 'host',     v: 'localhost:3306' },
-              { k: 'user',     v: 'kacoon' },
-              { k: 'password', v: 'kacoon' },
-              { k: 'database', v: 'kacoon' },
-            ],
-          },
-          {
-            name: "PostgreSQL 13",
-            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
-            desc: 'Advanced open-source relational database.',
-            dsn: 'postgresql://kacoon:kacoon@localhost:5432/kacoon',
-            info: [
-              { k: 'host',     v: 'localhost:5432' },
-              { k: 'user',     v: 'kacoon' },
-              { k: 'password', v: 'kacoon' },
-              { k: 'database', v: 'kacoon' },
-            ],
-          },
-          {
-            name: 'MongoDB 7',
-            icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original-wordmark.svg',
-            desc: 'Document-oriented NoSQL database.',
-            dsn: 'mongodb://kacoon:kacoon@localhost:27017',
-            info: [
-              { k: 'host',     v: 'localhost:27017' },
-              { k: 'user',     v: 'kacoon' },
-              { k: 'password', v: 'kacoon' },
-            ],
-          },
-          {
-            name: 'Redis',
-            icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original.svg',
-            desc: 'In-memory data structure store. No auth configured.',
-            dsn: 'redis://localhost:6379',
-            info: [
-              { k: 'host', v: 'localhost:6379' },
-              { k: 'auth', v: 'none' },
-            ],
-          },
-        ],
-      },
-      {
-        label: 'Storage & Mail',
-        items: [
-          {
-            name: 'MinIO API',
-            desc: 'S3-compatible object storage API endpoint.',
-            url: 'http://localhost:9000',
-            info: [
-              { k: 'endpoint', v: 'localhost:9000' },
-              { k: 'key',      v: 'kacoon' },
-              { k: 'secret',   v: 'kacoon123' },
-            ],
-          },
-          {
-            name: 'MinIO Client',
-            desc: 'Interactive mc container for managing MinIO from the stack network.',
-            info: [
-              { k: 'shell', v: 'docker compose exec minio-client sh' },
-              { k: 'purpose', v: 'admin utility' },
-            ],
-          },
-          {
-            name: 'Mailpit SMTP',
-            desc: 'SMTP server for outbound mail capture. No credentials needed.',
-            info: [
-              { k: 'host', v: 'localhost:1025' },
-              { k: 'auth', v: 'none' },
-            ],
-          },
-        ],
-      },
-    ];
-
-    const visibleGroups = computed(() => {
-      const q = query.value.toLowerCase().trim();
-      if (!q) return groups;
-      return groups
-        .map(g => ({
-          ...g,
-          items: g.items.filter(
-            s => s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q)
-          ),
-        }))
-        .filter(g => g.items.length > 0);
-    });
-
-    const totalVisible = computed(() =>
-      visibleGroups.value.reduce((n, g) => n + g.items.length, 0)
-    );
-
-    return { query, toast, copy, visibleGroups, totalVisible };
-  },
-}).mount('#app');
-</script>
-</body>
+          return { query, toast, copy, visibleGroups, totalVisible };
+        },
+      }).mount("#app");
+    </script>
+  </body>
 </html>
