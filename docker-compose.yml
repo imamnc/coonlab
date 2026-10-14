@@ -139,6 +139,7 @@ services:
       - ./php/8.3/supervisor:/etc/supervisor.d
       - ./php/8.3/crontab/jobs:/etc/crontabs/jobs
     ports:
+      - "8383:80"
       - "8183:8000"
       - "5183:5183"
     networks:
@@ -159,10 +160,11 @@ services:
     restart: unless-stopped
     volumes:
       - ../Projects:/var/www/html
-      - ./php/8.0/php.ini:/usr/local/etc/php/php.ini
+      # - ./php/8.0/php.ini:/usr/local/etc/php/php.ini
       - ./php/8.0/supervisor/:/etc/supervisor.d
-      - ./php/8.0/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      # - ./php/8.0/www.conf:/usr/local/etc/php-fpm.d/www.conf
     ports:
+      - "8880:80"
       - "8180:8000"
       - "5180:5180"
     networks:

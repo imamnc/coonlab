@@ -1,10 +1,20 @@
-# Use the official PHP image as the base image
-FROM php:8.3-fpm
+# Use the official PHP image with Apache as the base image
+FROM php:8.3-apache
 
 # Install OS dependencies
-RUN apt update && apt install -y \
+RUN . /etc/os-release \
+    && if [ "$VERSION_CODENAME" = "bullseye" ]; then \
+    sed -i 's#http://deb.debian.org/debian-security#http://archive.debian.org/debian-security#' /etc/apt/sources.list; \
+    if ls /etc/apt/sources.list.d/*.sources >/dev/null 2>&1; then \
+    sed -i 's#http://deb.debian.org/debian-security#http://archive.debian.org/debian-security#' /etc/apt/sources.list.d/*.sources; \
+    fi; \
+    fi \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
     git \
     nano \
+    cron \
+    supervisor \
     zlib1g-dev \
     libzip-dev \
     libpng-dev \
@@ -20,7 +30,8 @@ RUN apt update && apt install -y \
     default-mysql-client \
     libpq-dev \
     ca-certificates \
-    gnupg
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------
 # Install Node.js (v20 LTS) & npm
@@ -33,7 +44,6 @@ RUN curl -fsSL https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linu
     && ln -s /usr/local/lib/nodejs/bin/node /usr/bin/node \
     && ln -s /usr/local/lib/nodejs/bin/npm /usr/bin/npm \
     && ln -s /usr/local/lib/nodejs/bin/npx /usr/bin/npx
-
 
 # ---------------------------------------------------
 # Install PHP extensions
@@ -50,12 +60,6 @@ RUN docker-php-ext-configure zip \
     && docker-php-ext-install pcntl
 
 # ---------------------------------------------------
-# Install Swoole extension via PECL
-# ---------------------------------------------------
-RUN pecl install swoole \
-    && docker-php-ext-enable swoole
-
-# ---------------------------------------------------
 # Install Redis extension via PECL
 # ---------------------------------------------------
 RUN pecl install redis \
@@ -65,6 +69,24 @@ RUN pecl install redis \
 # Install Composer globally
 # ---------------------------------------------------
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Configure Apache to serve the shared project root like XAMPP
+RUN a2enmod rewrite \
+    && echo "ServerName localhost" > /etc/apache2/conf-available/servername.conf \
+    && a2enconf servername
+
+COPY apache-default.conf /etc/apache2/sites-available/000-default.conf
+COPY php.ini /usr/local/etc/php/conf.d/zz-devcore.ini
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
+    && chown -R www-data:www-data /var/www/html
+
+WORKDIR /var/www/html
+EXPOSE 80
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["apache2-foreground"]
 
 # Verify installations
 RUN composer --version \
