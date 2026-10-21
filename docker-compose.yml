@@ -146,6 +146,30 @@ services:
       - kacoonet
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+  # ==================================================================================
+  # PHP 8.5
+  # ----------------------------------------------------------------------------------
+  # This service runs a PHP 8.5 development environment.
+  # ==================================================================================
+  php85:
+    container_name: kacoonlab-bin-php85
+    build:
+      context: ./php/8.5
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../Projects:/var/www/html
+      - ./php/8.5/supervisor:/etc/supervisor.d
+      - ./php/8.5/crontab/jobs:/etc/crontabs/jobs
+    ports:
+      - "8385:80"
+      - "8185:8000"
+      - "5185:5185"
+    networks:
+      - kacoonet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   
   # ==================================================================================
   # PHP 8.0
@@ -172,7 +196,7 @@ services:
     environment:
       - PHP_MEMORY_LIMIT=512M
     extra_hosts:
-      - "host.docker.internal:host-gateway" 
+      - "host.docker.internal:host-gateway"
 
   # ==================================================================================
   # MYSQL 8.0
