@@ -226,7 +226,7 @@ services:
   # ==================================================================================
   postgres:
     container_name: kacoonlab-bin-postgres
-    image: postgres:13
+    image: pgvector/pgvector:pg13
     restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data
