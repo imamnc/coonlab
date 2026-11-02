@@ -10,6 +10,7 @@ CoonLabs DevCore is a multi-service Docker development stack for local applicati
 - `nodejs` for Node.js development
 - `bun` for Bun development
 - `python` for Python development
+- `dotnet` for .NET 10 development
 - `php83` for PHP 8.3 development
 - `php80` for PHP 8.0 development
 - `mysql` for MySQL 8.0
@@ -39,6 +40,7 @@ Persistent data is stored in named volumes for databases and admin tools, while 
 | `nodejs`       | Node.js dev environment | `3010`, `5172` | `3010`, `5172`    |
 | `bun`          | Bun dev environment     | `3020`, `5170` | `3020`, `5170`    |
 | `python`       | Python dev environment  | `8290`, `5290` | `8290`, `5290`    |
+| `dotnet`       | .NET 10 development     | `8100`         | `8080`            |
 | `php83`        | PHP 8.3 dev environment | `8183`, `5183` | `8000`, `5183`    |
 | `php80`        | PHP 8.0 dev environment | `8180`, `5180` | `8000`, `5180`    |
 | `mysql`        | MySQL database          | `3306`         | `3306`            |
@@ -101,6 +103,19 @@ Use `bun` for Bun-based projects. It mirrors the Node.js layout, shares the same
 ### Python
 
 Use `python` for Python applications and tooling. The container publishes the `8290` and `5290` host ports for local services that your app may run.
+
+### .NET 10
+
+Use `dotnet` for .NET 10 projects under `../Projects`. The SDK container shares the workspace at `/app` and stays idle until you start a project. Run the app without a launch profile so it listens on the configured container port:
+
+```bash
+docker compose up -d dotnet
+docker compose exec dotnet bash
+cd /app/<project>
+dotnet watch run --no-launch-profile
+```
+
+Open the app at `http://localhost:8100`.
 
 ### PHP 8.3 and PHP 8.0
 

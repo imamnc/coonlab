@@ -124,6 +124,29 @@ services:
       - "host.docker.internal:host-gateway"
 
   # ==================================================================================
+  # DOTNET 10
+  # ----------------------------------------------------------------------------------
+  # This service runs a .NET 10 development environment.
+  # ==================================================================================
+  dotnet10:
+    container_name: kacoonlab-bin-dotnet
+    tty: true
+    build:
+      context: ./dotnet
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../Projects:/app
+    ports:
+      - "8100:8080"
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+    networks:
+      - kacoonet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # ==================================================================================
   # PHP 8.3
   # ----------------------------------------------------------------------------------
   # This service runs a PHP 8.3 development environment.
