@@ -102,7 +102,7 @@ Use `bun` for Bun-based projects. It mirrors the Node.js layout, shares the same
 
 ### Python
 
-Use `python` for Python 3.14 applications and tooling. Conda manages the base Python installation and project environments. The container publishes the `8290` and `5290` host ports for local services that your app may run.
+Use `python` for Python 3.14 applications and tooling. The image provides CPython as the default interpreter and Conda for project environments. The container publishes the `8290` and `5290` host ports for local services that your app may run.
 
 Open a shell and create or activate a project environment:
 
