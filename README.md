@@ -102,7 +102,16 @@ Use `bun` for Bun-based projects. It mirrors the Node.js layout, shares the same
 
 ### Python
 
-Use `python` for Python applications and tooling. The container publishes the `8290` and `5290` host ports for local services that your app may run.
+Use `python` for Python 3.14 applications and tooling. Conda manages the base Python installation and project environments. The container publishes the `8290` and `5290` host ports for local services that your app may run.
+
+Open a shell and create or activate a project environment:
+
+```bash
+docker compose up -d python
+docker compose exec python bash
+conda create -n myenv python=3.14
+conda activate myenv
+```
 
 ### .NET 10
 
